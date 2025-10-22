@@ -23,6 +23,6 @@ namespace Mairie.Domain.DTOs
 
         [Required(ErrorMessage = "Le statut est obligatoire")]
         [StringLength(50, ErrorMessage = "Le statut ne peut pas dépasser 50 caractères")]
-        public StatutEnum Statut { get; set; } = 0;
+        public string Statut { get; set; } = "EnCours";
     }
 }

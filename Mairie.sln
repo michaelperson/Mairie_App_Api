@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mairie.Domain", "Mairie.Dom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mairie.DAL", "Mairie.DAL\Mairie.DAL.csproj", "{1186AAC3-C5AF-4A77-932A-C8B9F3011BEA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mairie.Client", "Mairie.Client\Mairie.Client.csproj", "{74FA83B6-C70E-4571-89DD-CC0564F4B899}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,8 +57,23 @@ Global
 		{1186AAC3-C5AF-4A77-932A-C8B9F3011BEA}.Release|x64.Build.0 = Release|Any CPU
 		{1186AAC3-C5AF-4A77-932A-C8B9F3011BEA}.Release|x86.ActiveCfg = Release|Any CPU
 		{1186AAC3-C5AF-4A77-932A-C8B9F3011BEA}.Release|x86.Build.0 = Release|Any CPU
+		{74FA83B6-C70E-4571-89DD-CC0564F4B899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74FA83B6-C70E-4571-89DD-CC0564F4B899}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74FA83B6-C70E-4571-89DD-CC0564F4B899}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{74FA83B6-C70E-4571-89DD-CC0564F4B899}.Debug|x64.Build.0 = Debug|Any CPU
+		{74FA83B6-C70E-4571-89DD-CC0564F4B899}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{74FA83B6-C70E-4571-89DD-CC0564F4B899}.Debug|x86.Build.0 = Debug|Any CPU
+		{74FA83B6-C70E-4571-89DD-CC0564F4B899}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74FA83B6-C70E-4571-89DD-CC0564F4B899}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74FA83B6-C70E-4571-89DD-CC0564F4B899}.Release|x64.ActiveCfg = Release|Any CPU
+		{74FA83B6-C70E-4571-89DD-CC0564F4B899}.Release|x64.Build.0 = Release|Any CPU
+		{74FA83B6-C70E-4571-89DD-CC0564F4B899}.Release|x86.ActiveCfg = Release|Any CPU
+		{74FA83B6-C70E-4571-89DD-CC0564F4B899}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0E13E217-B50B-4F95-AB6E-990492C6CB51}
 	EndGlobalSection
 EndGlobal

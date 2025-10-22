@@ -25,7 +25,7 @@ namespace Mairie.API.Controllers
         [SwaggerResponse(200, "Liste des demandes", typeof(IEnumerable<DemandeReadDTO>))] 
         [SwaggerResponse(404, "Aucune demande trouvée")]
         [SwaggerResponse(500, "Erreur lors de la récupération des données")]
-        [Authorize(Policy = "HasARolePolicy")]
+       // [Authorize(Policy = "HasARolePolicy")]
         public async Task<ActionResult<IEnumerable<DemandeReadDTO>>> GetAll()
         {
             try
@@ -182,6 +182,7 @@ namespace Mairie.API.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Policy = "HasARolePolicy")]
         public async Task<ActionResult> Update(int id, [FromBody] UpdateDemandeDto dto)
         {
             if (id != dto.Id)
@@ -193,6 +194,13 @@ namespace Mairie.API.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            StatutEnum statut;
+            if(!Enum.TryParse<StatutEnum>(dto.Statut, out statut))
+            {
+                return BadRequest("Statut invalide");
+            }
+
 
             try
             {
@@ -211,7 +219,7 @@ namespace Mairie.API.Controllers
                 //    //DateCreation = existingDemande.DateCreation
                 //};
 
-                existingDemande.Statut = dto.Statut;
+                existingDemande.Statut = statut;
                 existingDemande.TypeDemande = dto.TypeDeDemande;
                 existingDemande.NomCitoyen = dto.NomCitoyen;
 
@@ -231,6 +239,8 @@ namespace Mairie.API.Controllers
         }
 
         [HttpDelete("{id:int}")]
+
+        [Authorize(Policy = "ChefServicePolicy")]
         public async Task<ActionResult> Delete(int id)
         {
             if (id <= 0)

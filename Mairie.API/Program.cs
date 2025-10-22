@@ -1,10 +1,11 @@
-using Mairie.API.Helpers;
+ï»¿using Mairie.API.Helpers;
 using Mairie.API.Infrastructure.Security;
 using Mairie.DAL.Configuration;
 using Mairie.DAL.Services;
 using Mairie.Domain.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Negotiate;
+using OwaspHeaders.Core.Extensions;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
 
@@ -23,11 +24,12 @@ builder.Services.AddAuthorization(
         options.AddPolicy("AdminOrAgentPolicy", p => p.RequireClaim(ClaimTypes.Role, "Administrateur", "Agent"));
         options.AddPolicy("HasARolePolicy", p => p.RequireClaim(ClaimTypes.Role, "Administrateur", "ChefService", "Agent"));
         //Ajout d'une policy custom
+        
         options.AddPolicy("DepartementMember", p => p.RequireClaim("https://www.mairie.fr/claims/Departement", "EtatCivil"));
     }
     );
 
-//Récupération de la connection string
+//RÃ©cupÃ©ration de la connection string
 #pragma warning disable CA1416 // Validate platform compatibility
 string cnstr = SecretManager.Decrypt(
       builder.Configuration["ConnectionStrings:DefaultConnection"]??
@@ -43,7 +45,7 @@ builder.Services.AddSingleton(new DatabaseConfiguration(cnstr));
 builder.Services.AddScoped<IDemandeRepository, DemandeRepository>();
 builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 
-//Enregistrer le service qui se charge de récupérer les informations de l'utilisateur
+//Enregistrer le service qui se charge de rÃ©cupÃ©rer les informations de l'utilisateur
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<IClaimsTransformation, RoleClaimsTransformation>();
@@ -71,8 +73,24 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-var app = builder.Build();
+//La politique cross origin
+builder.Services.AddCors(
+    options=>
+    {
+        options.AddDefaultPolicy(policy =>
+        {
+            policy.WithOrigins("https://localhost:7210") // Port de notre Blazor App
+                  .AllowAnyMethod()
+                  .AllowAnyHeader()
+                  .AllowCredentials(); // IMPORTANT pour Windows Auth
+        });
+    });
 
+
+
+
+var app = builder.Build();
+app.UseCors("BlazorCors");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -81,6 +99,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+if(!app.Environment.IsDevelopment())
+{
+    //FORCER HTTPS
+    app.UseHsts();
+}
+app.UseSecureHeadersMiddleware();
 app.UseAuthentication();
 app.UseAuthorization();
 
