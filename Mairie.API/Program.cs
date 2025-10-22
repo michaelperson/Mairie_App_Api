@@ -1,7 +1,9 @@
 using Mairie.API.Helpers;
+using Mairie.API.Infrastructure.Security;
 using Mairie.DAL.Configuration;
 using Mairie.DAL.Services;
 using Mairie.Domain.Interfaces;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
@@ -9,7 +11,7 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 //Configuration l'"authentification" Windows
-builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme);
+builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme).AddNegotiate();
 
 //Configuration politique d'autorisation
 builder.Services.AddAuthorization(
@@ -39,7 +41,9 @@ builder.Services.AddScoped<IDemandeRepository, DemandeRepository>();
 builder.Services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 
 //Enregistrer le service qui se charge de récupérer les informations de l'utilisateur
-
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IUserContext, UserContext>();
+builder.Services.AddScoped<IClaimsTransformation, RoleClaimsTransformation>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
