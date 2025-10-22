@@ -25,7 +25,7 @@ namespace Mairie.API.Controllers
         [SwaggerResponse(200, "Liste des demandes", typeof(IEnumerable<DemandeReadDTO>))] 
         [SwaggerResponse(404, "Aucune demande trouvée")]
         [SwaggerResponse(500, "Erreur lors de la récupération des données")]
-        
+        [Authorize(Policy = "HasARolePolicy")]
         public async Task<ActionResult<IEnumerable<DemandeReadDTO>>> GetAll()
         {
             try
@@ -60,6 +60,7 @@ namespace Mairie.API.Controllers
         [SwaggerResponse(200, "La demande identifiée par l'id", typeof(DemandeReadDTO))]
         [SwaggerResponse(404, "Aucune demande trouvée avec l'id transmis")]
         [SwaggerResponse(500, "Erreur lors de la récupération des données")]
+        [Authorize(Policy = "HasARolePolicy")]
         public async Task<ActionResult<DemandeReadDTO>> GetById(
             [SwaggerParameter("Identifiant de la demande", Required = true)] 
             int id
@@ -93,7 +94,7 @@ namespace Mairie.API.Controllers
         }
 
         [HttpGet("statut/{statut}")]
-
+        [Authorize(Policy = "HasARolePolicy")]
         public async Task<ActionResult<IEnumerable<DemandeReadDTO>>> GetByStatut(StatutEnum statut)
         {
             try
@@ -119,6 +120,7 @@ namespace Mairie.API.Controllers
         }
 
         [HttpGet("search")]
+        [Authorize(Policy = "DepartementMember")]
         public async Task<ActionResult<IEnumerable<DemandeReadDTO>>> Search([FromQuery] string term)
         {
             if (string.IsNullOrWhiteSpace(term) || term.Length < 3)

@@ -21,6 +21,9 @@ builder.Services.AddAuthorization(
         options.AddPolicy("ChefServicePolicy", p => p.RequireClaim(ClaimTypes.Role, "ChefService"));
         options.AddPolicy("AdministrateurPolicy", p => p.RequireClaim(ClaimTypes.Role, "Administrateur"));
         options.AddPolicy("AdminOrAgentPolicy", p => p.RequireClaim(ClaimTypes.Role, "Administrateur", "Agent"));
+        options.AddPolicy("HasARolePolicy", p => p.RequireClaim(ClaimTypes.Role, "Administrateur", "ChefService", "Agent"));
+        //Ajout d'une policy custom
+        options.AddPolicy("DepartementMember", p => p.RequireClaim("https://www.mairie.fr/claims/Departement", "EtatCivil"));
     }
     );
 

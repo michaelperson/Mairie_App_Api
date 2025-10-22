@@ -31,6 +31,11 @@ namespace Mairie.API.Infrastructure.Security
             {
                 identity.AddClaim(new Claim(ClaimTypes.Role, role));
             }
+
+            //Ajout d'un claim custom pour le département
+            string? departement = await _roleRepository.GetDepartementByWindowsIdAsync(_userContext.WindowsId);
+            identity.AddClaim(new Claim("https://www.mairie.fr/claims/Departement", departement??"None"));
+
             //retourne mon principal completé par mes rôles
             return principal;
         }
