@@ -1,4 +1,5 @@
-﻿using Mairie.Domain.DTOs;
+﻿using Mairie.API.Infrastructure.Security;
+using Mairie.Domain.DTOs;
 using Mairie.Domain.Entities;
 using Mairie.Domain.Enumerations;
 using Mairie.Domain.Interfaces;
@@ -15,11 +16,13 @@ namespace Mairie.API.Controllers
     {
         private readonly IDemandeRepository _repository;
         private readonly ILogger<DemandeController> _logger;
-       
-        public DemandeController(IDemandeRepository demandeRepository, ILogger<DemandeController> logger )
+        private readonly IAuthorizationService _authService;
+
+        public DemandeController(IDemandeRepository demandeRepository, ILogger<DemandeController> logger, IAuthorizationService authService )
         {
             _repository= demandeRepository;
             _logger = logger;
+            _authService = authService;
         }
         [HttpGet]
         [SwaggerResponse(200, "Liste des demandes", typeof(IEnumerable<DemandeReadDTO>))] 
@@ -30,6 +33,7 @@ namespace Mairie.API.Controllers
         {
             try
             {
+                _logger.LogInformation("Demande de lecture des demandes");
                 IEnumerable<Demande> demandes = await _repository.GetAllAsync();
                 if (demandes.Count() > 0) 
                     return Ok(
@@ -208,6 +212,13 @@ namespace Mairie.API.Controllers
                 if (existingDemande == null)
                 {
                     return NotFound($"Demande avec l'ID {id} introuvable");
+                }
+
+                //Vérification des autorisations business
+             AuthorizationResult? result = await   _authService.AuthorizeAsync(User, existingDemande, DemandeRequirement.Update);
+                if(!result.Succeeded)
+                {
+                    return Forbid();
                 }
 
                 //Demande demande = new Demande
